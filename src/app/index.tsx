@@ -1,98 +1,143 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useState } from "react";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { useAuth } from "../contexts/AuthContext";
+import { styles } from "../styles/common";
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
+import { Redirect, useRouter } from "expo-router";
+
+export default function Login() {
+  const { entrar, usuario } = useAuth();
+  const router = useRouter();
+
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [erro, setErro] = useState("");
+  const [enviando, setEnviando] = useState(false);
+
+  async function fazerLogin() {
+    setErro("");
+
+    if (!email.trim() || !senha) {
+      setErro("Preencha o e-mail e a senha.");
+      return;
+    }
+
+    const formatoEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!formatoEmail.test(email.trim())) {
+      setErro("Digite um e-mail válido.");
+      return;
+    }
+
+    try {
+      setEnviando(true);
+
+      const sucesso = await entrar(email, senha);
+
+      if (!sucesso) {
+        setErro("E-mail ou senha inválidos.");
+        return;
+      }
+    } catch {
+      setErro("Não foi possível salvar a sessão.");
+    } finally {
+      setEnviando(false);
+    }
   }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
+
+  if (usuario) {
+    return <Redirect href="/home" />;
   }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.content}
+      keyboardShouldPersistTaps="handled"
+    >
+      <Text style={styles.title} accessibilityRole="header">
+        MoveSmart
+      </Text>
+
+      <Text style={styles.subtitle}>Mobilidade Urbana Inteligente</Text>
+
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>Acesse sua conta</Text>
+
+        <Text style={styles.body}>
+          Entre para acompanhar o transporte público de São Paulo.
+        </Text>
+
+        <Text style={styles.label}>E-mail</Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Digite seu e-mail"
+          placeholderTextColor="#777777"
+          accessibilityLabel="E-mail"
+          accessibilityHint="Digite o e-mail cadastrado no MoveSmart"
+          keyboardType="email-address"
+          autoComplete="email"
+          autoCapitalize="none"
+          autoCorrect={false}
+          value={email}
+          onChangeText={setEmail}
+        />
+
+        <Text style={styles.label}>Senha</Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Digite sua senha"
+          placeholderTextColor="#777777"
+          accessibilityLabel="Senha"
+          accessibilityHint="Digite a senha da sua conta MoveSmart"
+          secureTextEntry
+          autoComplete="current-password"
+          value={senha}
+          onChangeText={setSenha}
+        />
+
+        {erro ? (
+          <Text
+            style={styles.error}
+            accessibilityRole="alert"
+            accessibilityLiveRegion="polite"
+          >
+            {erro}
+          </Text>
+        ) : null}
+
+        <Pressable
+          style={styles.button}
+          accessibilityRole="button"
+          accessibilityLabel="Entrar no MoveSmart"
+          accessibilityHint="Valida seu e-mail e senha para acessar o aplicativo"
+          accessibilityState={{
+            disabled: enviando,
+            busy: enviando,
+          }}
+          disabled={enviando}
+          onPress={fazerLogin}
+        >
+          <Text style={styles.buttonText}>
+            {enviando ? "Entrando..." : "Entrar"}
+          </Text>
+        </Pressable>
+
+        <Pressable
+          style={styles.secondaryButton}
+          accessibilityRole="button"
+          accessibilityLabel="Criar uma nova conta"
+          accessibilityHint="Abre o formulário de cadastro de cidadão"
+          onPress={() => router.push("/cadastro")}
+        >
+          <Text style={styles.secondaryButtonText}>Criar Conta</Text>
+        </Pressable>
+      </View>
+
+      <Text style={styles.note}>São Paulo - SP | Acesso demonstrativo</Text>
+    </ScrollView>
   );
 }
-
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
-  },
-});
