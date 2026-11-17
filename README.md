@@ -354,55 +354,6 @@ O cadastro demonstrativo utiliza `expo-crypto` para gerar um **salt aleatório**
 Em uma aplicação real, seria necessário um backend com autenticação e autorização no servidor, armazenamento seguro e algoritmo de derivação de senha apropriado (por exemplo, Argon2id), além de políticas de privacidade e proteção de dados.
 
 ---
-
-## Arquitetura e organização do código
-
-O projeto utiliza uma arquitetura simples, separando **telas, estilos, contextos, serviços e dados simulados**:
-
-```text
-movesmart/
-├── assets/                         # Imagens e recursos do projeto/Expo
-├── src/
-│   ├── app/                        # Telas e rotas do Expo Router
-│   │   ├── _layout.tsx             # Stack, rotas protegidas e navegação
-│   │   ├── index.tsx               # Login
-│   │   ├── cadastro.tsx            # Criação de conta de cidadão
-│   │   ├── home.tsx                # Painel inicial
-│   │   ├── linhas.tsx              # Lista e pesquisa de linhas
-│   │   ├── linhas/
-│   │   │   └── [id].tsx            # Detalhes de cada linha
-│   │   ├── relatar.tsx             # Formulário de relatos
-│   │   ├── relatos.tsx             # Histórico/consulta de relatos
-│   │   └── iot.tsx                 # Monitoramento e simulação IoT
-│   ├── components/                 # Componentes reutilizáveis
-│   ├── contexts/
-│   │   └── AuthContext.tsx         # Estado de autenticação
-│   ├── mocks/
-│   │   ├── usuarios.ts             # Contas de teste e tipos de usuário
-│   │   └── linhas.ts              # Linhas fictícias e tipos
-│   ├── services/
-│   │   ├── authService.ts          # Cadastro, login e sessão
-│   │   ├── linhasService.ts        # Consulta e integração com leituras IoT
-│   │   ├── relatosService.ts       # Validação e persistência dos relatos
-│   │   └── iotService.ts           # Cálculo, movimentação e persistência IoT
-│   ├── styles/
-│   │   ├── common.ts               # Estilos compartilhados
-│   │   ├── homeStyles.ts
-│   │   ├── linhasStyles.ts
-│   │   ├── relatarStyles.ts
-│   │   ├── relatosStyles.ts
-│   │   └── iotStyles.ts
-│   ├── constants/                  # Arquivos auxiliares remanescentes do template
-│   └── hooks/                      # Arquivos auxiliares remanescentes do template
-├── app.json                        # Configuração do Expo
-├── package.json                    # Scripts e dependências
-├── package-lock.json               # Versões resolvidas pelo npm, se versionado
-├── tsconfig.json                   # Configuração do TypeScript
-└── README.md                       # Esta documentação
-```
-
-> Algumas pastas do template podem conter arquivos adicionais, conforme a versão do Expo utilizada; a lista acima destaca os arquivos centrais do MoveSmart.
-
 ### Fluxos principais
 
 ```text
@@ -484,34 +435,29 @@ O protótipo foi verificado manualmente ao longo do desenvolvimento, incluindo:
 
 ## Capturas de tela (prints)
 
-**Antes da entrega:** crie a pasta `docs/screenshots/` no repositório e adicione prints reais do aplicativo, preferencialmente na visualização mobile.
+### Tela de login
+<img width="433" height="777" alt="image" src="https://github.com/user-attachments/assets/a01885da-01d6-48a7-84b0-214600f33a3e" />
 
-Sugestões de nomes:
+### Cadastro
+<img width="441" height="775" alt="image" src="https://github.com/user-attachments/assets/1274a763-d670-4a6e-9a90-9f78aea7c00c" />
 
-```text
-docs/
-└── screenshots/
-    ├── 01-login.png
-    ├── 02-cadastro.png
-    ├── 03-home-cidadao.png
-    ├── 04-linhas.png
-    ├── 05-detalhes-linha.png
-    ├── 06-relatar-problema.png
-    ├── 07-meus-relatos.png
-    ├── 08-home-agente.png
-    ├── 09-consulta-relatos-agente.png
-    └── 10-monitoramento-iot.png
-```
+### Inicio
+<img width="441" height="832" alt="image" src="https://github.com/user-attachments/assets/a3180c08-fc5f-476b-a147-22fb11b15533" />
 
-Após colocar os arquivos, adicione imagens ao README com a sintaxe:
+### Consulta
+<img width="443" height="836" alt="image" src="https://github.com/user-attachments/assets/4c7416a0-050c-4f94-ad50-b2a99faab732" />
 
-```markdown
-![Tela de Login](docs/screenshots/01-login.png)
-![Home do Cidadão](docs/screenshots/03-home-cidadao.png)
-![Monitoramento IoT](docs/screenshots/10-monitoramento-iot.png)
-```
+### Detalhes da linha
+<img width="442" height="748" alt="image" src="https://github.com/user-attachments/assets/95ef7975-5a12-4848-bc05-86679d2ddd1b" />
 
-**Este README ainda não incorpora prints reais**, pois eles precisam ser adicionados aos caminhos acima no repositório. Evite publicar capturas com informações pessoais, senhas ou dados reais de usuários.
+### Relatar Problema
+<img width="442" height="528" alt="image" src="https://github.com/user-attachments/assets/814e19cb-15e4-46cc-b359-70b5830af4a3" />
+
+### Meus Relatos
+<img width="417" height="622" alt="image" src="https://github.com/user-attachments/assets/aa313520-4050-4013-a0cc-fd0467f99d3c" />
+
+### Monitoramento iot
+<img width="417" height="667" alt="image" src="https://github.com/user-attachments/assets/f785f755-7681-4410-b258-0fc2eab0bbea" />
 
 ---
 
