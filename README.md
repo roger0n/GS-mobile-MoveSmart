@@ -463,9 +463,7 @@ O protótipo foi verificado manualmente ao longo do desenvolvimento, incluindo:
 
 ## Vídeo de apresentação
 
-**Duração máxima da entrega:** 3 minutos.  
-**Link do vídeo:** `ADICIONAR_LINK_DO_VIDEO_AQUI`
-
+**Link do vídeo:** https://youtu.be/tHs70mEhKAk
 ---
 
 ## Limitações e possíveis evoluções
